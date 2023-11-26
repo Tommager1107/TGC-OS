@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="sk">
 <head>
@@ -80,11 +81,16 @@
     .game-selector button {
       margin: 10px;
     }
+
+    .error-message {
+      color: red;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
   <div id="console">
-    <div class="button" id="games" onclick="showGameSelector()">Games</div>
+    <div class="button" id="games" onclick="showFileSelector()">Games</div>
     <div class="button" id="menu">Menu</div>
     <div class="button" id="quit">Quit</div>
   </div>
@@ -96,10 +102,18 @@
         <button onclick="openGameInNewTab('pong.html')">Pong</button>
       </div>
       <div class="close-btn" onclick="closeGamePopup()">Close</div>
+      <div class="error-message" id="errorMessage"></div>
     </div>
   </div>
 
+  <input type="file" id="fileInput" style="display: none;" accept=".tgcos" onchange="handleFileSelect()">
+
   <script>
+    function showFileSelector() {
+      const fileInput = document.getElementById('fileInput');
+      fileInput.click();
+    }
+
     function showGameSelector() {
       const gamesPopup = document.getElementById('gamesPopup');
       gamesPopup.style.display = 'flex';
@@ -113,6 +127,23 @@
     function openGameInNewTab(gameUrl) {
       window.open(gameUrl, '_blank');
       closeGamePopup();
+    }
+
+    function handleFileSelect() {
+      const errorMessage = document.getElementById('errorMessage');
+      const fileInput = document.getElementById('fileInput');
+      const selectedFile = fileInput.files[0];
+
+      if (selectedFile && selectedFile.name.endsWith('.tgcos')) {
+        errorMessage.style.display = 'none';
+        showGameSelector();
+      } else {
+        errorMessage.innerText = 'Error: Incorrect file selected.';
+        errorMessage.style.display = 'block';
+      }
+
+      // Reset the file input to trigger change event on subsequent selections
+      fileInput.value = null;
     }
   </script>
 </body>
